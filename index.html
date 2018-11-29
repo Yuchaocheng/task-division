@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+    />
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <title>家务分工</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .totalTask {
+      }
+      .el-tag + .el-tag {
+        margin-left: 10px;
+      }
+      .button-new-tag {
+        margin-left: 10px;
+        height: 32px;
+        line-height: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      .input-new-tag {
+        width: 90px;
+        margin-left: 10px;
+        vertical-align: bottom;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="totalTask">
+        <el-tag
+          :key="tag"
+          v-for="(tag,i) in totalWork"
+          closable
+          :disable-transitions="false"
+          @close="handleClose(tag)"
+        >
+          {{ (i+1)'.'tag }}
+        </el-tag>
+        <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="small"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
+        >
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput"
+          >+ New Tag</el-button
+        >
+      </div>
+      <el-row>
+        <el-button
+          size="mini"
+          type="primary"
+          @click="division(totalWork)"
+          :disabled="isClick"
+        >
+          家务分工
+        </el-button>
+        <el-button size="mini" @click="resert">重置</el-button>
+      </el-row>
+      <div class="person1">
+        小王的家务：
+        <span v-for="(item,index) in divisionObj.person1"
+          >{{ index.item }}，</span
+        >
+      </div>
+      <div class="person2">
+        小俞的家务：
+        <span v-for="(item,index) in divisionObj.person2"
+          >{{ index.item }}，</span
+        >
+      </div>
+    </div>
+  </body>
+  <script>
+    var app = new Vue({
+      el: "#app",
+      data: {
+        inputVisible: false,
+        inputValue: "",
+        isClick: false,
+        message: "Hello Vue!",
+        totalWork: [
+          "收狗屎",
+          "喂狗（早晚）",
+          "保持房间整洁（桌子上杂物清理，沙发上衣物整理）",
+          "扫地拖地",
+          "周床单清洗",
+          "铺床",
+          "洗衣服",
+          "刷马桶"
+        ],
+        divisionObj: {}
+      },
+      methods: {
+        division(array, num1, num2) {
+          let Num1 =
+            Math.random() < 0.5
+              ? Math.floor(array.length / 2)
+              : Math.ceil(array.length / 2);
+          num1 = num1 || Num1;
+          num2 = num2 || array.length - num1;
+          let people = {
+            person1: [],
+            person1: []
+          };
+          while (people.person1.length < num1) {
+            let x = Math.floor(Math.random() * array.length);
+            if (people.person1.indexOf(array[x]) === -1) {
+              people.person1.push(array[x]);
+            }
+            people.person2 = array.filter(ele => {
+              return people.person1.indexOf(ele) === -1;
+            });
+            people.person2.length = num2;
+            this.isClick = true;
+            this.divisionObj = people;
+          }
+        },
+        resert() {
+          this.isClick = false;
+          this.divisionObj = {};
+        },
+        handleClose(tag) {
+          this.totalWork.splice(this.totalWork.indexOf(tag), 1);
+        },
+        showInput() {
+          this.inputVisible = true;
+          this.$nextTick(_ => {
+            this.$refs.saveTagInput.$refs.input.focus();
+          });
+        },
+        handleInputConfirm() {
+          let inputValue = this.inputValue;
+          if (inputValue) {
+            this.totalWork.push(inputValue);
+          }
+          this.inputVisible = false;
+          this.inputValue = "";
+        }
+      }
+    });
+  </script>
+</html>
