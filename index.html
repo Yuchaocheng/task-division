@@ -17,9 +17,12 @@
         padding: 0;
       }
       .totalTask {
+        border: 2px solid #eee;
+        padding: 40px 20px;
+        width: 50%;
       }
-      .el-tag + .el-tag {
-        margin-left: 10px;
+      .el-tag {
+        margin: 10px 8px
       }
       .button-new-tag {
         margin-left: 10px;
@@ -45,7 +48,7 @@
           :disable-transitions="false"
           @close="handleClose(tag)"
         >
-          {{ (i+1)'.'tag }}
+          {{ i + 1 }}. {{ tag }}
         </el-tag>
         <el-input
           class="input-new-tag"
@@ -74,15 +77,11 @@
       </el-row>
       <div class="person1">
         小王的家务：
-        <span v-for="(item,index) in divisionObj.person1"
-          >{{ index.item }}，</span
-        >
+        <span v-for="(item,index) in divisionObj.person1">{{ item }}，</span>
       </div>
       <div class="person2">
         小俞的家务：
-        <span v-for="(item,index) in divisionObj.person2"
-          >{{ index.item }}，</span
-        >
+        <span v-for="(item,index) in divisionObj.person2">{{ item }}，</span>
       </div>
     </div>
   </body>
