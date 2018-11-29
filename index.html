@@ -16,24 +16,51 @@
         margin: 0;
         padding: 0;
       }
+      #app {
+        padding-top: 50px;
+        display: flex;
+        justify-content: space-around;
+      }
       .totalTask {
         border: 2px solid #eee;
-        padding: 40px 20px;
-        width: 50%;
+        width: 40%;
+      }
+      .totalTask > div,.division > div {
+        padding: 10px 20px;
+      }
+      .totalTask .titleRow,
+      .division .titleRow {
+        background: darkgoldenrod;
+        border-bottom: 1px solid #ccc;
+        color: white;
+      }
+      .totalTask .content,.division .content {
+        position: relative;
+        padding: 40px 20px 20px 20px;
+      }
+      .division {
+        border: 2px solid #eee;
+        width: 48%;
       }
       .el-tag {
-        margin: 10px 8px
+        margin: 10px 8px;
       }
       .button-new-tag {
-        margin-left: 10px;
+        position: absolute;
+        top: 0px;
+        left: 16px;
+        margin: 10px;
         height: 32px;
         line-height: 30px;
         padding-top: 0;
         padding-bottom: 0;
       }
       .input-new-tag {
+        position: absolute;
+        top: 0px;
+        left: 16px;
         width: 90px;
-        margin-left: 10px;
+        margin: 10px;
         vertical-align: bottom;
       }
     </style>
@@ -41,47 +68,63 @@
   <body>
     <div id="app">
       <div class="totalTask">
-        <el-tag
-          :key="tag"
-          v-for="(tag,i) in totalWork"
-          closable
-          :disable-transitions="false"
-          @close="handleClose(tag)"
-        >
-          {{ i + 1 }}. {{ tag }}
-        </el-tag>
-        <el-input
-          class="input-new-tag"
-          v-if="inputVisible"
-          v-model="inputValue"
-          ref="saveTagInput"
-          size="small"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
-        >
-        </el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput"
-          >+ New Tag</el-button
-        >
+        <el-row class="titleRow"> 任务总数 </el-row>
+        <div class="content">
+          <el-tag
+            :key="tag"
+            v-for="(tag,i) in totalWork"
+            closable
+            :disable-transitions="false"
+            @close="handleClose(tag)"
+          >
+            {{ i + 1 }}. {{ tag }}
+          </el-tag>
+          <el-input
+            class="input-new-tag"
+            v-if="inputVisible"
+            v-model="inputValue"
+            ref="saveTagInput"
+            size="small"
+            @keyup.enter.native="handleInputConfirm"
+            @blur="handleInputConfirm"
+          >
+          </el-input>
+          <el-button
+            v-else
+            class="button-new-tag"
+            size="small"
+            @click="showInput"
+            type="primary"
+          >
+            + 家务</el-button
+          >
+        </div>
       </div>
-      <el-row>
-        <el-button
-          size="mini"
-          type="primary"
-          @click="division(totalWork)"
-          :disabled="isClick"
-        >
-          家务分工
-        </el-button>
-        <el-button size="mini" @click="resert">重置</el-button>
-      </el-row>
-      <div class="person1">
-        小王的家务：
-        <span v-for="(item,index) in divisionObj.person1">{{ item }}，</span>
-      </div>
-      <div class="person2">
-        小俞的家务：
-        <span v-for="(item,index) in divisionObj.person2">{{ item }}，</span>
+      <div class="division">
+        <el-row class="titleRow"> 任务分工 </el-row>
+        <el-row>
+          <el-button
+            size="mini"
+            type="primary"
+            @click="division(totalWork)"
+            :disabled="isClick"
+          >
+            家务分工
+          </el-button>
+          <el-button size="mini" @click="resert">重置</el-button>
+          <!--
+            <el-input size="mini" v-model="num1"></el-input>
+            <el-input size="mini" v-model="num2"></el-input>
+          -->
+        </el-row>
+        <div class="person1">
+          小王的家务：
+          <span v-for="(item,index) in divisionObj.person1">{{ item }}，</span>
+        </div>
+        <div class="person2">
+          小俞的家务：
+          <span v-for="(item,index) in divisionObj.person2">{{ item }}，</span>
+        </div>
       </div>
     </div>
   </body>
@@ -105,6 +148,7 @@
         ],
         divisionObj: {}
       },
+      computed: {},
       methods: {
         division(array, num1, num2) {
           let Num1 =
